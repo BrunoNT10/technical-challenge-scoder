@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AppService {
-  getHello(): string {
-    return 'Hello World!';
+  getStandardRoute(): Record<string, string> {
+    return {"type": "success", "message": "The API was accessed succesfully!"};
   }
 }
