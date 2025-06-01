@@ -1,6 +1,7 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { connectWebSocket } from "../../services/api";
 
 enum InputType {
     Password = "password",
@@ -10,7 +11,7 @@ enum InputType {
 export default function Login() {
     const [inputType, setInputType] = useState(InputType.Password)
     const [hiddenPassword, setHiddenPassword] = useState(true)
-    
+        
     const navigate = useNavigate();
     
     const changeIconStatus = () => {

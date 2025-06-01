@@ -1,7 +1,19 @@
 import Header from "../../components/Header"
 import Card from "../../components/Cards"
+import { connectWebSocket, listProducts } from "../../services/api"
+import { useEffect, useState } from "react"
 
 export default function Home () {
+    const [products, setProducts] = useState([])
+    useEffect(() => {connectWebSocket()}, [])
+    useEffect(() => {
+        const fetchData = async () => {
+            const apiResponse = await listProducts()
+            setProducts(apiResponse.items)
+        }
+        fetchData()
+    }, [])
+    
     return (
         <>
             <Header />
@@ -9,15 +21,21 @@ export default function Home () {
                 id="cards"
                 className="
                     grid
-                    grid-cols-[1fr_3fr_3fr_3fr_3fr_3fr_1fr]
-                    gap-4
+                    grid-cols-[1fr_3fr_1fr]
+                    lg:grid-cols-[1fr_3fr_3fr_3fr_3fr_3fr_1fr]
+                    lg:gap-4
                 "
             >
-                <Card className="col-start-2" category="Todos"/>
-                <Card className="col-start-3" category="Eletrônicos"/>
-                <Card className="col-start-4" category="Roupas"/>
-                <Card className="col-start-5" category="Veículos"/>
-                <Card className="col-start-6" category="Alimentos"/>
+                <Card 
+                    className="col-start-2 lg:col-start-2" 
+                    category="Todos"
+                    products={products}
+                />
+                <Card 
+                    className="col-start-2 lg:col-start-3" 
+                    category="Select"
+                    products={products}
+                />
             </div>
         </>
     )

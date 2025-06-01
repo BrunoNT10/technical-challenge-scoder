@@ -14,6 +14,6 @@ export class Product {
   @Column()
   productPrice: number;
   
-  @Column({ length : 500 })
-  productImageUrl: string;
+  @Column()
+  productCategory: string
 }

@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CreateProductService, ListProductService } from './product.service';
 import { Product } from './entities/product.entity';
 import { RedisModule } from 'src/modules/redis/redis.module';
+import { ProductGateway } from './websocket/product.websocket';
 // import { AppService } from './app.service';
 
 @Module({
@@ -16,7 +17,8 @@ import { RedisModule } from 'src/modules/redis/redis.module';
   ],
   providers: [
     CreateProductService,
-    ListProductService
+    ListProductService,
+    ProductGateway
   ],
 })
 export class ProductModule {}

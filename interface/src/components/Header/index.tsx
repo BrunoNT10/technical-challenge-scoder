@@ -65,28 +65,6 @@ export default function Header() {
                     <li 
                         className="
                             hover:bg-gray-200 
-                            cursor-pointer
-                            text-navy-midnight
-                            mt-[0.5rem]
-                            mr-[0.5rem]
-                        "
-                    >
-                        Informações dos Produtos 
-                    </li>
-                    <li 
-                        className="
-                            hover:bg-gray-200 
-                            cursor-pointer 
-                            text-navy-midnight
-                            mt-[0.5rem]
-                            mr-[0.5rem]
-                        "
-                    >
-                        Tabela de Produtos
-                    </li>
-                    <li 
-                        className="
-                            hover:bg-gray-200 
                             cursor-pointer 
                             text-navy-midnight
                             mt-[0.5rem]
