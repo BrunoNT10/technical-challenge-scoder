@@ -1,20 +1,105 @@
-import "./index.css"
+import { useState } from "react";
+import { BsList } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
 
 export default function Header() {
+    const [open, setOpen] = useState(false)
+    
+    const navigate = useNavigate()
+    
+    const logOut = () => navigate("/")
+    const toggleDropdown = () => setOpen(!open);
+    
     return (
         <header 
             className="
-                bg-[#0D0C1D] 
-                text-[#F1DAC4] 
+                bg-navy-midnight 
+                text-beige
                 flex 
-                h-[15vh] 
+                h-[5rem] 
                 font-raleway-500
-                items-center
-                justify-between
+                relative
             "
-        >
-            {/* <img className="h-[8vh]" src="images/logo_meerkat.png"></img> */}
-            {/* <span className="ml-auto mr-auto text-3xl">Precisamos confirmar que você é um suricato...</span> */}
+        >   
+            <div className="ml-auto h-auto flex flex-col text-right">
+                <button 
+                    className="rounded-lg mt-[1.1rem] mb-auto ml-auto mr-2"
+                    onClick={toggleDropdown}
+                >
+                    <BsList size={40}/>
+                </button>
+                <div 
+                    className={`
+                        absolute 
+                        top-full
+                        w-40
+                        bg-white
+                        rounded
+                        shadow-lg
+                        right-0
+                        ${open ? "block": "hidden"}
+                    `}
+                >
+                  <ul>
+                    <li 
+                        className="hover:bg-gray-200
+                            cursor-pointer
+                            text-navy-midnight
+                            mt-[0.5rem]
+                            mr-[0.5rem]
+                        "
+                    >
+                        Home
+                    </li>
+                    <li 
+                        className="
+                            hover:bg-gray-200 
+                            cursor-pointer
+                            text-navy-midnight
+                            mt-[0.5rem]
+                            mr-[0.5rem]
+                        "
+                    >
+                        Cadastrar Produto
+                    </li>
+                    <li 
+                        className="
+                            hover:bg-gray-200 
+                            cursor-pointer
+                            text-navy-midnight
+                            mt-[0.5rem]
+                            mr-[0.5rem]
+                        "
+                    >
+                        Informações dos Produtos 
+                    </li>
+                    <li 
+                        className="
+                            hover:bg-gray-200 
+                            cursor-pointer 
+                            text-navy-midnight
+                            mt-[0.5rem]
+                            mr-[0.5rem]
+                        "
+                    >
+                        Tabela de Produtos
+                    </li>
+                    <li 
+                        className="
+                            hover:bg-gray-200 
+                            cursor-pointer 
+                            text-navy-midnight
+                            mt-[0.5rem]
+                            mr-[0.5rem]
+                            mb-[0.5rem]
+                        "
+                        onClick={logOut}
+                    >
+                        Sair
+                    </li>
+                  </ul>
+                </div>
+            </div>
         </header>
     )
 }
