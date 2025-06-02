@@ -7,7 +7,6 @@ export default function Header() {
     
     const navigate = useNavigate()
     
-    const logOut = () => navigate("/")
     const toggleDropdown = () => setOpen(!open);
     
     return (
@@ -48,6 +47,7 @@ export default function Header() {
                             mt-[0.5rem]
                             mr-[0.5rem]
                         "
+                        onClick={() => {navigate('/home')}}
                     >
                         Home
                     </li>
@@ -59,6 +59,7 @@ export default function Header() {
                             mt-[0.5rem]
                             mr-[0.5rem]
                         "
+                        onClick={() => {navigate('/new-product')}}
                     >
                         Cadastrar Produto
                     </li>
@@ -71,7 +72,7 @@ export default function Header() {
                             mr-[0.5rem]
                             mb-[0.5rem]
                         "
-                        onClick={logOut}
+                        onClick={() => {navigate('/')}}
                     >
                         Sair
                     </li>

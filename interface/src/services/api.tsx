@@ -11,6 +11,19 @@ export async function listProducts () {
     return apiResponse.data
 }
 
+type NewProductModel = {
+    productName: string
+    productDescription: string
+    productPrice: number
+    productCategory: string
+}
+
+export async function registerNewProduct (props: NewProductModel) {
+    const apiResponse = await api.post('/products', props)
+    
+    return apiResponse
+}
+
 export const connectWebSocket = () => {
     const socket = io(baseURL)
     socket.on("connect", () => {

@@ -12,9 +12,9 @@ export default function Card(props: CardModel) {
     const [category, setCategory] = useState(props.category)
     const [categories, setCategories] = useState<Categories[]>([])
     const [
-        productsByCategories, 
-        setProductsByCategories
-    ] = useState<Record<string, any>[]>([])
+        productsCountByCategories, 
+        setProductsCountByCategories
+    ] = useState<Record<string, any>>([])
     
     useEffect(() => {
         if (props.category === Categories.All) {
@@ -31,8 +31,19 @@ export default function Card(props: CardModel) {
     }, [])
     
     useEffect(() => {
+        const allProducts = props.products
+        const countItems = allProducts.reduce((acumulator, item) => {
+          acumulator[`${item.productCategory}`] = (acumulator[item.productCategory] || 0) + 1;
+          return acumulator;
+        }, {});
         
-    }, [])
+        Object.values(Categories).map((category) => {    
+            countItems[category] = countItems[category] ?? 0
+        })
+        countItems[Categories.All] = allProducts.length
+        
+        setProductsCountByCategories(countItems)
+    }, [props])
     
     const handleCategorySelected = (category: string) => {
         setCategory(category)
@@ -60,7 +71,7 @@ export default function Card(props: CardModel) {
             `}
         >   
             <p className="text-sm sm:text-base"> Categoria: { category } </p>
-            <p className="text-xs sm:text-sm"> Número de Produtos: 20 </p>
+            <p className="text-xs sm:text-sm"> Número de Produtos: {productsCountByCategories[category]} </p>
             {
                 category === Categories.All ? 
                 <button 
@@ -85,7 +96,7 @@ export default function Card(props: CardModel) {
                 <CategorySelect 
                     categories={categories}
                     onChange={handleCategorySelected}
-                    className={"w-[80%] ml-auto mr-auto"}
+                    className={"w-[70%] h-[20%] ml-auto mr-auto"}
                 />
             }
             

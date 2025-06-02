@@ -7,7 +7,12 @@ type propsModel = {
 export default function CategorySelect(props: propsModel) {
     return (
         <select 
-            className={`text-center bg-navy-midnight ${props.className}`}
+            className={`
+                text-center 
+                bg-navy-midnight 
+                rounded-lg 
+                ${props.className}
+            `}
             onChange={(e) => props.onChange(e.target.value)}
         >
             {props.categories.map((category) => {
