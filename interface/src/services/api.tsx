@@ -75,7 +75,7 @@ export async function updateProductItem (props: UpdateProductModel) {
     }
     catch(error) {
         toast.error(
-            "Ocorreu um erro inesperado ao listar os produtos.", {
+            "Ocorreu um erro ao atualizar o produto.", {
                 toastId: ToastIds.UnexpectedException,
                 autoClose: 2500
             }
