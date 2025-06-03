@@ -35,7 +35,8 @@ The project consists in:
 All services was hosted in `Droplet Service` of DigitalOcean. I create a virtual machine and run the docker-compose inside this.
 Do you want test locally? Run the docker-compose file that all project will be build.
 
-Run the following command in the root.
+1. Copy the .env.example to a .env file, fill the infos and go to the next step
+2. Run the following command in the root: 
 ```
 docker-compose up -d --build
 ```
