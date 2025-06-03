@@ -28,7 +28,6 @@ export default function Login() {
     }
     
     const callProductsPage = () => {
-        console.log(process.env.REACT_APP_CREDENTIAL)
         if (credential == process.env.REACT_APP_CREDENTIAL) {
             login()
             navigate('/home')        

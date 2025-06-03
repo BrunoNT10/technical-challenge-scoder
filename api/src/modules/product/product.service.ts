@@ -1,6 +1,7 @@
 import { Inject, Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
+
 import { Product } from './entities/product.entity'
 import { Redis } from 'ioredis'
 import { OperationsMessages, ConstantsValues } from '../../utils/enums'
@@ -145,8 +146,6 @@ export class UpdateProductService {
             Object.keys(updates).forEach((key) => {
                 redisJsonItem[key] = updates[key]
             })
-            console.log(redisJsonItem)
-            console.log(redisKey)
             await this.redisClient.set(redisKey, JSON.stringify(redisJsonItem))
         }
     }
@@ -236,7 +235,7 @@ export class UpdateCacheService {
     async updateCache (): Promise<void> {
         try{
             const products = await this.productRepository.find()
-                Array.from(products).forEach((product) => {
+                Array.from(products).forEach((product: Product) => {
                 const productKey = `product:${product.id}`
                 this.redisClient.set(productKey, JSON.stringify(product))
             })

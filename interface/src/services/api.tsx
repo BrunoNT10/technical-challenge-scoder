@@ -9,11 +9,10 @@ const api = axios.create({
 })
 
 export async function updateCache () {
-    console.log("atualizando cache")
     try{
         const apiResponse = await api.post("/products/cache")    
     } catch (error: any) {
-        console.log("An unexpected error occured when update the cache.")
+        console.error("An unexpected error occured when update the cache.")
     }
 }
 

@@ -60,7 +60,7 @@ export class ProductController {
   async updateProduct (
     @Param('id') id: number, 
     @Body() updates: Product
-  ) {
+  ): Promise<UpdateProductResponseDto> {
     const updateProduct = await this.updateProductService.updateProduct(id, updates)
     return new UpdateProductResponseDto(
       OperationStatus.SUCCESS, 
@@ -70,7 +70,7 @@ export class ProductController {
   }
   
   @Delete(':id')
-  async deleteProduct(@Param('id') id: number) {
+  async deleteProduct(@Param('id') id: number):Promise<DeleteProductResponseDto> {
     await this.deleteProductService.deleteProduct(id);
     return new DeleteProductResponseDto(
       OperationStatus.SUCCESS,
@@ -79,7 +79,7 @@ export class ProductController {
   }
   
   @Post('cache')
-  async updateCache() {
+  async updateCache(): Promise<void> {
     await this.updateCacheService.updateCache()
   }
 }

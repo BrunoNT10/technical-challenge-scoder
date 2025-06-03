@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
-import { ProductController } from './product.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';        
+
+import { ProductController } from './product.controller';
 import { 
   CreateProductService, 
   DeleteProductService, 
@@ -11,7 +12,6 @@ import {
 import { Product } from './entities/product.entity';
 import { RedisModule } from 'src/modules/redis/redis.module';
 import { ProductGateway } from './websocket/product.websocket';
-// import { AppService } from './app.service';
 
 @Module({
   imports: [

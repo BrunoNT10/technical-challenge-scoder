@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { AppController } from './app.controller';
 import { ProductModule } from './modules/product/product.module'; 
 import { Product } from './modules/product/entities/product.entity';
 import { AppService } from './app.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { RedisModule } from './modules/redis/redis.module';
 
 @Module({
