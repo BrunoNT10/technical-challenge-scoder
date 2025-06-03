@@ -3,7 +3,7 @@ import { io } from 'socket.io-client'
 import { toast } from 'react-toastify'
 import { ToastIds } from '../utils/enums'
 
-const baseURL = "http://159.89.86.218/:3000/"
+const baseURL = "http://159.89.86.218:3000/"
 const api = axios.create({
     baseURL: baseURL,
 })
