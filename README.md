@@ -15,4 +15,7 @@ The project consists in:
 - **API**: An api developed using `nestjs`
 - **Database**: MySQL for database
 - **Cache (Redis)**: Redis for cache integrated with nest js
-- 
+- **Interface**: React with typescript
+
+All services was hosted in `Droplet Service` of DigitalOcean. I create a virtual machine and run the docker-compose inside this.
+Do you want test locally? Run the docker-compose file that all project will be build.
