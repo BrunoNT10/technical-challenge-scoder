@@ -4,14 +4,15 @@ import { Repository } from 'typeorm'
 import { Product } from './entities/product.entity'
 import { Redis } from 'ioredis'
 import { OperationsMessages, ConstantsValues } from '../../utils/enums'
-
+import { ProductGateway } from './websocket/product.websocket'
 @Injectable()
 export class CreateProductService {
     constructor (
         @InjectRepository(Product) 
         private readonly productRepository: Repository<Product>, 
         @Inject('REDIS_CLIENT')
-        private readonly redisClient: Redis
+        private readonly redisClient: Redis,
+        private productGateway: ProductGateway
     ) {}
     
     private readonly logger = new Logger(CreateProductService.name)
@@ -54,6 +55,8 @@ export class CreateProductService {
             )
         }
         
+        this.productGateway.sendNewProduct(savedProduct)
+    
         return savedProduct;
     }
 }
@@ -115,5 +118,136 @@ export class ListProductService {
         )
         
         return items;
+    }
+}
+
+@Injectable()
+export class UpdateProductService {
+    constructor (
+        @InjectRepository(Product) private readonly productRepository: Repository<Product>, 
+        @Inject('REDIS_CLIENT') private readonly redisClient: Redis,
+        private productGateway: ProductGateway
+    ) {}
+    
+    private readonly logger = new Logger(CreateProductService.name)
+    
+    async updateDatabaseItem(id: number, updates: Partial<Product>): Promise<Product> {
+        const product = await this.productRepository.findOneOrFail({ where: { id }})
+        Object.assign(product, updates)
+        return await this.productRepository.save(product)
+    }
+    
+    async updateRedisItem(id: number, updates: Partial<Product>): Promise<void> {
+        const redisKey = `product:${id}`
+        const redisStringItem = await this.redisClient.get(redisKey)
+        if (redisStringItem) {
+            const redisJsonItem = JSON.parse(redisStringItem)
+            Object.keys(updates).forEach((key) => {
+                redisJsonItem[key] = updates[key]
+            })
+            console.log(redisJsonItem)
+            console.log(redisKey)
+            await this.redisClient.set(redisKey, JSON.stringify(redisJsonItem))
+        }
+    }
+    
+    async updateProduct(id: number, updates: Partial<Product>): Promise<Product> {
+        let updatedProduct
+        try{
+            updatedProduct = await this.updateDatabaseItem(id, updates)        
+        }
+        catch (error: unknown) {
+            this.logger.error(`${OperationsMessages.ERROR_WHEN_UPDATE_DATABASE_PRODUCT} ${error}`)
+            throw new HttpException(
+                OperationsMessages.ERROR_WHEN_UPDATE_PRODUCT, 
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+        try{
+            await this.updateRedisItem(id, updates)        
+        }
+        catch (error: unknown) {
+            this.logger.error(`${OperationsMessages.ERROR_WHEN_UPDATE_REDIS_PRODUCT} ${error}`)
+            throw new HttpException(
+                OperationsMessages.ERROR_WHEN_UPDATE_PRODUCT, 
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+        
+        this.productGateway.sendUpdatedProduct(updatedProduct)    
+        
+        return updatedProduct
+    }
+}
+
+@Injectable()
+export class DeleteProductService {
+    constructor (
+        @InjectRepository(Product) private readonly productRepository: Repository<Product>, 
+        @Inject('REDIS_CLIENT') private readonly redisClient: Redis,
+        private productGateway: ProductGateway
+    ) {}
+    
+    private readonly logger = new Logger(CreateProductService.name)
+    
+    async deleteDatabaseItem(id: number): Promise<void> {
+        await this.productRepository.delete(id)
+    }
+    
+    async deleteRedisItem(id: number): Promise<void> {
+        const redisKey = `product:${id}`
+        await this.redisClient.del(redisKey)
+    }
+    
+    async deleteProduct(id: number): Promise<void> {
+        try {
+            await this.deleteDatabaseItem(id)
+        }
+        catch (error: unknown) {
+            this.logger.error(`${OperationsMessages.ERROR_WHEN_DELETE_DATABASE_PRODUCT} ${error}`)
+            throw new HttpException(
+                OperationsMessages.ERROR_WHEN_DELETE_PRODUCT, 
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+        try {
+            await this.deleteRedisItem(id)
+        }
+        catch (error: unknown) {
+            this.logger.error(`${OperationsMessages.ERROR_WHEN_DELETE_REDIS_PRODUCT} ${error}`)
+            throw new HttpException(
+                OperationsMessages.ERROR_WHEN_DELETE_PRODUCT, 
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+        this.productGateway.sendDeletedProduct(id)
+    }
+}
+
+@Injectable()
+export class UpdateCacheService {
+    constructor (
+        @InjectRepository(Product) private readonly productRepository: Repository<Product>, 
+        @Inject('REDIS_CLIENT') private readonly redisClient: Redis,
+    ) {}
+    
+    private readonly logger = new Logger(CreateProductService.name)
+    
+    async updateCache (): Promise<void> {
+        try{
+            const products = await this.productRepository.find()
+                Array.from(products).forEach((product) => {
+                const productKey = `product:${product.id}`
+                this.redisClient.set(productKey, JSON.stringify(product))
+            })
+        }
+        catch(error: unknown) {
+            this.logger.error(`${OperationsMessages.ERROR_WHEN_UPDATE_CACHE} ${error}`)
+            throw new HttpException(
+                OperationsMessages.ERROR_WHEN_UPDATE_CACHE, 
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+        this.logger.log("Cache updated successfully!")
     }
 }

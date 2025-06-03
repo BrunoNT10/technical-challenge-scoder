@@ -1,7 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ProductController } from './product.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';        
-import { CreateProductService, ListProductService } from './product.service';
+import { 
+  CreateProductService, 
+  DeleteProductService, 
+  ListProductService, 
+  UpdateProductService,
+  UpdateCacheService
+} from './product.service';
 import { Product } from './entities/product.entity';
 import { RedisModule } from 'src/modules/redis/redis.module';
 import { ProductGateway } from './websocket/product.websocket';
@@ -18,6 +24,9 @@ import { ProductGateway } from './websocket/product.websocket';
   providers: [
     CreateProductService,
     ListProductService,
+    UpdateProductService,
+    DeleteProductService,
+    UpdateCacheService,
     ProductGateway
   ],
 })

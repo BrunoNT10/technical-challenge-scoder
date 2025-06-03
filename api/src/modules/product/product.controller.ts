@@ -1,15 +1,37 @@
-import { Controller, Get, Post, Body, Query } from '@nestjs/common';
+import { 
+  Controller, 
+  Get, 
+  Post, 
+  Patch, 
+  Delete,
+  Body, 
+  Param 
+} from '@nestjs/common';
 import { Product } from './entities/product.entity';
-import { CreateProductService, ListProductService } from './product.service';
-import { CreateProductDto, CreateProductResponseDto, ListProductResponseDto } from './dto/product.dto';
+import { 
+  CreateProductService, 
+  ListProductService,
+  UpdateProductService,
+  DeleteProductService,
+  UpdateCacheService
+} from './product.service';
+import { 
+  CreateProductDto, 
+  CreateProductResponseDto, 
+  UpdateProductResponseDto, 
+  ListProductResponseDto,
+  DeleteProductResponseDto
+} from './dto/product.dto';
 import { OperationsMessages, OperationStatus, ParamsDescriptions } from 'src/utils/enums';
-import { count } from 'console';
 
 @Controller("products")
 export class ProductController {
   constructor(
     private readonly createProductService: CreateProductService, 
-    private readonly listProductService: ListProductService
+    private readonly listProductService: ListProductService,
+    private readonly updateProductService: UpdateProductService,
+    private readonly deleteProductService: DeleteProductService,
+    private readonly updateCacheService: UpdateCacheService,
   ) {}
   
   @Get()
@@ -33,4 +55,33 @@ export class ProductController {
       savedProduct
     );
   }
+  
+  @Patch(':id')
+  async updateProduct (
+    @Param('id') id: number, 
+    @Body() updates: Product
+  ) {
+    const updateProduct = await this.updateProductService.updateProduct(id, updates)
+    return new UpdateProductResponseDto(
+      OperationStatus.SUCCESS, 
+      OperationsMessages.SUCCESS_WHEN_UPDATE_ITEM, 
+      updateProduct
+    );
+  }
+  
+  @Delete(':id')
+  async deleteProduct(@Param('id') id: number) {
+    await this.deleteProductService.deleteProduct(id);
+    return new DeleteProductResponseDto(
+      OperationStatus.SUCCESS,
+      OperationsMessages.SUCCESS_WHEN_DELETE_ITEM
+    )
+  }
+  
+  @Post('cache')
+  async updateCache() {
+    await this.updateCacheService.updateCache()
+  }
 }
+
+

@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react"
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { connectWebSocket } from "../../services/api";
+import { updateCache } from "../../services/api";
+import { toast } from 'react-toastify'
+import { useAuth } from '../../contexts/AuthContext';
 
 enum InputType {
     Password = "password",
@@ -11,8 +13,14 @@ enum InputType {
 export default function Login() {
     const [inputType, setInputType] = useState(InputType.Password)
     const [hiddenPassword, setHiddenPassword] = useState(true)
-        
+    const [credential, setCredential] = useState("")
+    const { login } = useAuth()
+    
     const navigate = useNavigate();
+    
+    useEffect(() => {
+        updateCache()
+    }, [])
     
     const changeIconStatus = () => {
         setHiddenPassword(!hiddenPassword);
@@ -20,7 +28,14 @@ export default function Login() {
     }
     
     const callProductsPage = () => {
-        navigate('/home')
+        console.log(process.env.REACT_APP_CREDENTIAL)
+        if (credential == process.env.REACT_APP_CREDENTIAL) {
+            login()
+            navigate('/home')        
+        }
+        else {
+            toast.error("Você é um predador de suricatos querendo entrar na toca?")
+        }
     }
     
     return (
@@ -32,8 +47,10 @@ export default function Login() {
                 w-[100vw]
                 font-[Raleway]
                 grid 
-                grid-cols-[1fr_3fr_3fr_1fr] 
-                grid-rows-[1fr_3fr_3fr_1fr]
+                grid-cols-[1fr_5fr_1fr]
+                grid-rows-2
+                lg:grid-cols-[1fr_3fr_3fr_1fr] 
+                lg:grid-rows-[1fr_3fr_3fr_1fr]
                 gap-4
                 text-base
                 sm:text-lg
@@ -45,8 +62,9 @@ export default function Login() {
             <img 
                 className="
                     col-start-2 
-                    row-start-1
-                    row-span-4
+                    row-start-2
+                    lg:row-start-1
+                    lg:row-span-4
                     ml-auto
                     mr-[10%]
                     w-full
@@ -58,14 +76,16 @@ export default function Login() {
             ></img>
             <div 
                 className="
-                    col-start-3
-                    row-start-2
+                    col-start-2
+                    row-start-1
+                    lg:col-start-3
+                    lg:row-start-2
                     text-center
                     flex
                     flex-col
                     bg-[#474973]
                     gap-4
-                    row-span-2
+                    lg:row-span-2
                     justify-center   
                     object-contain
                     h-auto
@@ -112,6 +132,7 @@ export default function Login() {
                             flex-grow
                         "
                         type={inputType}
+                        onChange={(e) => {setCredential(e.target.value)}}
                     >
                     </input>
                     <button 

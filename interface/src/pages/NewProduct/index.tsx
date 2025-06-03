@@ -159,6 +159,8 @@ export default function NewProduct () {
                             rounded-lg
                             transition duration-500 ease-in-out
                             hover:bg-navy-midnight
+                            text-xs
+                            lg:text-lg
                         "
                         onClick={handleRegisterNewCategory}
                     > 

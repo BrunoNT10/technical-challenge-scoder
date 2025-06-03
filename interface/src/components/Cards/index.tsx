@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { Categories } from "../../utils/enums"
 import CategorySelect from "../CategorySelect"
+import { useNavigate } from "react-router-dom"
 
 type CardModel = {
     className: string
@@ -15,6 +16,8 @@ export default function Card(props: CardModel) {
         productsCountByCategories, 
         setProductsCountByCategories
     ] = useState<Record<string, any>>([])
+        
+    const navigate = useNavigate()
     
     useEffect(() => {
         if (props.category === Categories.All) {
@@ -60,7 +63,6 @@ export default function Card(props: CardModel) {
                 mr-auto
                 text-center
                 w-[100%]
-                mt-[2rem]
                 bg-slate-blue-dark
                 justify-center
                 rounded-lg
@@ -77,19 +79,20 @@ export default function Card(props: CardModel) {
                 <button 
                     className="
                         text-sm 
-                        bg-lavender-gray 
+                        bg-deep-night-blue 
                         w-[70%] 
                         h-[20%] 
                         ml-auto 
                         mr-auto
                         rounded-lg
-                        text-navy-midnight
-                        hover:bg-deep-night-blue
+                        text-beige
+                        hover:bg-navy-midnight
                         hover:text-beige
                         transition duration-500 ease-in-out
-                        text-base
-                        lg:text-lg
+                        text-sm
+                        lg:text-[1rem]
                     "
+                    onClick={() => {navigate('/new-product')}}
                 > 
                     Cadastrar produto
                 </button> :

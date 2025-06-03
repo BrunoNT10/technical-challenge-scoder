@@ -19,3 +19,14 @@ export enum StatusCode {
     NotFound = 404,
     InternalServerError = 500,
 }
+
+export enum ToastIds {
+    SuccessWhenUpdateItem = "items-updated-successfully",
+    SuccessWhenDeleteItem = "items-updated-successfully",
+    NoProductsFound = "list-products-404",
+    UnexpectedException = "unexpected-excpetion"
+}
+
+export enum ProductKeys {
+    Price = 'productPrice'
+}

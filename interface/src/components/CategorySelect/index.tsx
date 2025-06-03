@@ -1,19 +1,30 @@
+import { useState } from "react"
+
 type propsModel = {
     categories: string[]
-    onChange: (category: string) => void
-    className: string
+    onChange: (category: string) => void 
+    className?: string
+    initialValue?: string
 }
 
 export default function CategorySelect(props: propsModel) {
+    const [selectedValue, setSelectedValue] = useState(
+        props.initialValue ?? props.categories[0]
+    )
     return (
         <select 
             className={`
                 text-center 
-                bg-navy-midnight 
+                bg-deep-night-blue 
                 rounded-lg 
-                ${props.className}
+                text-md
+                ${props.className ?? ''}
             `}
-            onChange={(e) => props.onChange(e.target.value)}
+            value={selectedValue}
+            onChange={(e) => {
+                props.onChange(e.target.value)
+                setSelectedValue(e.target.value)
+            }}
         >
             {props.categories.map((category) => {
                 return (

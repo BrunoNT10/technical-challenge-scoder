@@ -5,26 +5,41 @@ import {
   OnGatewayConnection,
   OnGatewayDisconnect,
   ConnectedSocket,
+  WebSocketServer
 } from '@nestjs/websockets';
-import { Socket } from 'socket.io';
+
+import { Logger } from '@nestjs/common';
+import { Socket, Server } from 'socket.io';
 
 @WebSocketGateway({
   cors: {
-    origin: '*', // ajuste conforme necessário
+    origin: '*',
   },
 })
 export class ProductGateway implements OnGatewayConnection, OnGatewayDisconnect {
+  private readonly logger = new Logger(ProductGateway.name)
+  @WebSocketServer() server: Server
+  
   handleConnection(client: Socket) {
-    console.log(`Client connected: ${client.id}`);
+    this.logger.log(`Client connected: ${client.id}`);
   }
 
   handleDisconnect(client: Socket) {
-    console.log(`Client disconnected: ${client.id}`);
+    this.logger.log(`Client disconnected: ${client.id}`);
   }
 
-  @SubscribeMessage('message')
-  handleMessage(@MessageBody() data: any, @ConnectedSocket() client: Socket): void {
-    console.log(`Message from ${client.id}:`, data);
-    client.broadcast.emit('message', data); // envia para todos exceto o remetente
+  sendNewProduct(productItem: Record<string, any>) {
+    this.server.emit('new_product_item', productItem)
+    this.logger.log(`New product sent by web socket: ${productItem}`)
+  }
+  
+  sendUpdatedProduct(productItem: Record<string, any>) {
+    this.server.emit('updated_product_item', productItem)
+    this.logger.log(`Updated product sent by web socket: ${productItem}`)
+  }
+  
+  sendDeletedProduct(id: number) {
+    this.server.emit('deleted_product_item', id)
+    this.logger.log(`Deleted product sent by web socket: ${id}`)
   }
 }

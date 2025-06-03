@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { BsList } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function Header() {
     const [open, setOpen] = useState(false)
-    
+    const { logout } = useAuth()
     const navigate = useNavigate()
     
     const toggleDropdown = () => setOpen(!open);
@@ -16,6 +17,7 @@ export default function Header() {
                 text-beige
                 flex 
                 h-[5rem] 
+                w-full
                 font-raleway-500
                 relative
             "
@@ -72,7 +74,10 @@ export default function Header() {
                             mr-[0.5rem]
                             mb-[0.5rem]
                         "
-                        onClick={() => {navigate('/')}}
+                        onClick={() => {
+                            logout()
+                            navigate('/')
+                        }}
                     >
                         Sair
                     </li>

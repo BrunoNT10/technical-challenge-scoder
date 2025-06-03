@@ -1,0 +1,56 @@
+version: "3.8"
+
+services:
+  api:
+    build: ./api
+    container_name: api
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mysql
+      - redis
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_USER_PASSWORD=${DB_USER_PASSWORD}
+      - DB_NAME=${DB_HOST}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - PORT=${PORT}
+    restart: unless-stopped
+  
+  frontend:
+    build:
+      context: ./interface   
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_CREDENTIAL: ${REACT_APP_CREDENTIAL}
+    container_name: frontend
+    ports:
+      - "3001:80"  
+    environment:
+      - REACT_APP_CREDENTIAL=${REACT_APP_CREDENTIAL}
+    restart: unless-stopped
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 160704
+      MYSQL_DATABASE: products
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+volumes:
+  mysql_data:

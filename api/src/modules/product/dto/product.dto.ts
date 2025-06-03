@@ -41,3 +41,24 @@ export class ListProductResponseDto {
         this.count = count
     }
 }
+
+export class UpdateProductResponseDto {
+    type: string;
+    message: string;
+    item: Product;
+    
+    constructor(type: string, message: string, product: Product){
+        this.type = type;
+        this.message = message;
+        this.item = product;
+    }
+}
+
+export class DeleteProductResponseDto {
+    type: string
+    message: string
+    constructor(type: string, message: string){
+        this.type = type;
+        this.message = message;
+    }
+}
