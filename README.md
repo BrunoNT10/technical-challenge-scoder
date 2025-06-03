@@ -25,7 +25,7 @@ The functionalitys available are:
 - **Delete Products**: The user can delete a product clicking on exclude icon, it removes the product from database and cache ![image](https://github.com/user-attachments/assets/de367d61-11be-4271-a378-872d55ed63bb)
 - **Register new product**: The user can register a new product in a particular page ![image](https://github.com/user-attachments/assets/1452102f-0ae3-4498-ae02-52128db6f3b6)
 
-How It works?
+### How It works?
 The project consists in:
 - **API**: An api developed using `nestjs`
 - **Database**: MySQL for database
