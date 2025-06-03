@@ -33,9 +33,11 @@ The project consists in:
 - **Interface**: React with typescript, and Tailwind for CSS
 
 All services was hosted in `Droplet Service` of DigitalOcean. I create a virtual machine and run the docker-compose inside this.
+
+### How to execute the project?
 Do you want test locally? Run the docker-compose file that all project will be build.
 
-1. Copy the .env.example to a .env file, fill the infos and go to the next step
+1. Copy the .env.example to a .env file, fill the infos (don't change the ports of db and redis) and go to the next step.
 2. Run the following command in the root: 
 ```
 docker-compose up -d --build
